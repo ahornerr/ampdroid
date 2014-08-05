@@ -55,14 +55,13 @@ public class SelectedSongsView extends Fragment {
 			listview.setFastScrollAlwaysVisible(true);
 		}
 		if (controller.getServer() != null) {
-			ArrayList<String> list = new ArrayList<String>();
-			for (Song s : controller.getSelectedSongs()) {
-				list.add(s.toString());
-			}
-			SongArrayAdapter adapter = new SongArrayAdapter(getActivity().getApplicationContext(), list,
-					controller.getSelectedSongs());
-			listview.setAdapter(adapter);
-			listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//			ArrayList<String> list = new ArrayList<String>();
+//			for (Song s : controller.getSelectedSongs()) {
+//				list.add(s.toString());
+//            }
+        SongArrayAdapter adapter = new SongArrayAdapter(getActivity(), controller.getSelectedSongs());
+        listview.setAdapter(adapter);
+            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
 					Log.d("Play now added:", controller.getSongs().get(position).toString());

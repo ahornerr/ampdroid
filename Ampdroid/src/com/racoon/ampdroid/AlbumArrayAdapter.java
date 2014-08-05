@@ -26,29 +26,31 @@ import com.racoon.ampache.Album;
 public class AlbumArrayAdapter extends ArrayAdapter<String> implements SectionIndexer {
 	private final Context context;
 	private final ArrayList<String> textValues;
-	private ArrayList<Album> objectValues;
-	HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+	private ArrayList<Album> albums;
+	HashMap<String, Integer> albumMap = new HashMap<String, Integer>();
 	private String[] sections;
 	private String[] sectionsChar;
 
-	public AlbumArrayAdapter(Context context, ArrayList<String> list, ArrayList<Album> objects) {
+	public AlbumArrayAdapter(Context context, ArrayList<String> list, ArrayList<Album> albums) {
 		super(context, R.layout.album_list_item, list);
 		this.context = context;
 		this.textValues = list;
-		this.objectValues = objects;
+		this.albums = albums;
 
-		for (int i = 0; i < objects.size(); ++i) {
-			mIdMap.put(list.get(i), i);
+		for (int i = 0; i < albums.size(); ++i) {
+			albumMap.put(list.get(i), i);
 		}
 
-		Set<String> sectionLetters = mIdMap.keySet();
-		ArrayList<String> sectionList = new ArrayList<String>(sectionLetters);
-		Collections.sort(sectionList);
-		sections = new String[sectionList.size()];
-		sectionsChar = new String[sectionList.size()];
-		for (int i = 0; i < sectionList.size(); i++) {
-			sections[i] = sectionList.get(i);
-			sectionsChar[i] = sectionList.get(i).substring(0, 2);
+		Set<String> albumLetters = albumMap.keySet();
+		ArrayList<String> albumList = new ArrayList<String>(albumLetters);
+		Collections.sort(albumList);
+		sections = new String[albumList.size()];
+		sectionsChar = new String[albumList.size()];
+		for (int i = 0; i < albumList.size(); i++) {
+            String albumName = albumList.get(i);
+            int endNum = (albumName.length() > 2) ? 2 : albumName.length();
+            sections[i] = albumName;
+            sectionsChar[i] = albumName.substring(0, endNum);
 		}
 	}
 
@@ -62,20 +64,20 @@ public class AlbumArrayAdapter extends ArrayAdapter<String> implements SectionIn
 		TextView albumSongs = (TextView) rowView.findViewById(R.id.albumSongNumber);
 
 		albumTitle.setText(textValues.get(position));
-		albumArtist.setText(objectValues.get(position).getArtist());
+		albumArtist.setText(albums.get(position).getArtist());
 		
 		String songsText = " Song";
-		if (objectValues.get(position).getTracks() > 1) {
+		if (albums.get(position).getTracks() > 1) {
 			songsText = " Songs";
 		}
-		albumSongs.setText(String.valueOf(objectValues.get(position).getTracks()) + songsText);
+		albumSongs.setText(String.valueOf(albums.get(position).getTracks()) + songsText);
 		return rowView;
 	}
 
 	@Override
 	public long getItemId(int position) {
 		String item = getItem(position);
-		return mIdMap.get(item);
+		return albumMap.get(item);
 	}
 
 	@Override
@@ -85,9 +87,9 @@ public class AlbumArrayAdapter extends ArrayAdapter<String> implements SectionIn
 
 	public int getPositionForSection(int section) {
 		if ((sections.length == section) && section == 1) {
-			return mIdMap.get(sections[section - 1]);
+			return albumMap.get(sections[section - 1]);
 		}
-		return mIdMap.get(sections[section]);
+		return albumMap.get(sections[section]);
 	}
 
 	public int getSectionForPosition(int position) {

@@ -26,29 +26,31 @@ import com.racoon.ampache.Artist;
 public class ArtistArrayAdapter extends ArrayAdapter<String> implements SectionIndexer {
 	private final Context context;
 	private final ArrayList<String> textValues;
-	private ArrayList<Artist> objectValues;
-	HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+	private ArrayList<Artist> artists;
+	HashMap<String, Integer> artistMap = new HashMap<String, Integer>();
 	private String[] sections;
 	private String[] sectionsChar;
 
-	public ArtistArrayAdapter(Context context, ArrayList<String> list, ArrayList<Artist> objects) {
+	public ArtistArrayAdapter(Context context, ArrayList<String> list, ArrayList<Artist> artists) {
 		super(context, R.layout.album_list_item, list);
 		this.context = context;
 		this.textValues = list;
-		this.objectValues = objects;
+		this.artists = artists;
 
-		for (int i = 0; i < objects.size(); ++i) {
-			mIdMap.put(list.get(i), i);
+		for (int i = 0; i < artists.size(); ++i) {
+			artistMap.put(list.get(i), i);
 		}
 
-		Set<String> sectionLetters = mIdMap.keySet();
-		ArrayList<String> sectionList = new ArrayList<String>(sectionLetters);
-		Collections.sort(sectionList);
-		sections = new String[sectionList.size()];
-		sectionsChar = new String[sectionList.size()];
-		for (int i = 0; i < sectionList.size(); i++) {
-			sections[i] = sectionList.get(i);
-			sectionsChar[i] = sectionList.get(i).substring(0, 2);
+		Set<String> artistLetters = artistMap.keySet();
+		ArrayList<String> artistList = new ArrayList<String>(artistLetters);
+		Collections.sort(artistList);
+		sections = new String[artistList.size()];
+		sectionsChar = new String[artistList.size()];
+		for (int i = 0; i < artistList.size(); i++) {
+            String artistName = artistList.get(i);
+            int endNum = (artistName.length() > 2) ? 2 : artistName.length();
+            sections[i] = artistName;
+            sectionsChar[i] = artistName.substring(0, endNum);
 		}
 	}
 
@@ -62,17 +64,17 @@ public class ArtistArrayAdapter extends ArrayAdapter<String> implements SectionI
 
 		songTitle.setText(textValues.get(position));
 		String songsText = " Song";
-		if (objectValues.get(position).getSongs() > 1) {
+		if (artists.get(position).getSongs() > 1) {
 			songsText = " Songs";
 		}
-		songArtist.setText(String.valueOf(objectValues.get(position).getSongs()) + songsText);
+		songArtist.setText(String.valueOf(artists.get(position).getSongs()) + songsText);
 		return rowView;
 	}
 
 	@Override
 	public long getItemId(int position) {
 		String item = getItem(position);
-		return mIdMap.get(item);
+		return artistMap.get(item);
 	}
 
 	@Override
@@ -82,9 +84,9 @@ public class ArtistArrayAdapter extends ArrayAdapter<String> implements SectionI
 
 	public int getPositionForSection(int section) {
 		if ((sections.length == section) && section == 1) {
-			return mIdMap.get(sections[section - 1]);
+			return artistMap.get(sections[section - 1]);
 		}
-		return mIdMap.get(sections[section]);
+		return artistMap.get(sections[section]);
 	}
 
 	public int getSectionForPosition(int position) {

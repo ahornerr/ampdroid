@@ -54,12 +54,11 @@ public class SongsView extends Fragment {
 			listview.setFastScrollAlwaysVisible(true);
 		}
 		if (controller.getServer() != null) {
-			ArrayList<String> list = new ArrayList<String>();
-			for (Song s : controller.getSongs()) {
-				list.add(s.toString());
-			}
-			SongArrayAdapter adapter = new SongArrayAdapter(getActivity().getApplicationContext(), list,
-					controller.getSongs());
+//			ArrayList<String> list = new ArrayList<String>();
+//			for (Song s : controller.getSongs()) {
+//				list.add(s.toString());
+//			}
+			SongArrayAdapter adapter = new SongArrayAdapter(getActivity(), controller.getSongs());
 			listview.setAdapter(adapter);
 			listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
